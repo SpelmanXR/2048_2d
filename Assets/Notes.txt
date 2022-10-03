@@ -1,0 +1,7 @@
+﻿Credits
+=======
+
+Lightning
+https://opengameart.org/content/lightning-sprite-texture
+
+
