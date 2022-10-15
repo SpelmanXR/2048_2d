@@ -432,7 +432,7 @@ MonoBehaviour:
   Column3: {fileID: 447257621}
   Column4: {fileID: 2008138932}
   MinPower: 1
-  MaxPower: 2
+  MaxPower: 1
   DebugTxt: {fileID: 1039707323}
 --- !u!1 &637176601
 GameObject:

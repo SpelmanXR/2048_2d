@@ -3,6 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// The Block object has a 'Collider' and 'Trigger' children objects.
+/// The collider object is used to control the physics.  It is always on.
+/// The trigger object is turned on/off dpending on the state of the block.
+/// OnTrigger() calls the user supplied callback function.  When the object
+/// is first created, the trigger is enabled.  The OnTrigger() function
+/// disables the trigger, meaning that the callback function is executed
+/// only once.  When a block is terminated, the trigger of the block above it
+/// is re-enabled as that block is now again in free-fall.
+///
+/// temp: The callback function may simply set a "needsUpdate" flag in the
+/// GameBoard object.
+/// </summary>
 public class BlockController : MonoBehaviour
 {
     public enum Slide { NONE, UP, DOWN, LEFT, RIGHT }
@@ -11,22 +24,31 @@ public class BlockController : MonoBehaviour
     public TMP_Text ValueText;  //reference to TMP Text
     public Animator SpriteAnimator;
     public Animator LightningAnimator;
+    public Collider2D Collider;
+    public Collider2D Trigger;
 
-    //defines what type of method you're going to call.
-    public delegate void Callback(BlockController bc);
-
-    //declare a variable to hold the method you're going to call.
+    //defines what type of method you're going to call
+    //and declare a variable to hold the method you're going to call.
+    public delegate void Callback(BlockController bc, GameObject ObjCollidedWith);
     public Callback callbackFunction;
   
     //blocks will have serial numbers.  This will be used to prioritize block merges
 
     static int SN = 0;      //class serial number
-
     int serialNumber;   //current object's S/N
 
     bool bTerminate = false;        //set to true to self-destruct
     const float TERMINATION_DELAY_SEC = 1f;     //time for the termination animation to run
     float TerminationTime;
+
+    //new block
+    //bNewBlock is initially true, but is set to false after the first trigger.
+    bool bNewBlock;
+    public bool NewBlock
+    {
+        set { }
+        get { return bNewBlock; }
+    }
 
     //serial number property
     public int SerialNumber
@@ -42,6 +64,7 @@ public class BlockController : MonoBehaviour
         {
             power = value;
             ValueText.text = Value.ToString();
+            EnableTrigger(true);
         }
 
         get { return power; }
@@ -62,12 +85,14 @@ public class BlockController : MonoBehaviour
         
         serialNumber = SN;
         SN++;
+
+        bTerminate = false;
+        bNewBlock = true;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        bTerminate = false;
     }
 
     // Update is called once per frame
@@ -84,14 +109,46 @@ public class BlockController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void EnableTrigger(bool val)
     {
+        //Trigger.enabled = val;
+    }
+
+    public void EnableCollider(bool val)
+    {
+        Collider.enabled = val;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //if our trigger has been disabled, do not respond (another block hit our collider).
+        if (Trigger.enabled == false) return;
+
+        //check if we collided with another block
+        if (collision.gameObject.GetComponent<BlockController>())
+        {
+            Debug.Log("OnTriggerEnter: block #" + SerialNumber + "collided with block #" + collision.gameObject.GetComponent<BlockController>().SerialNumber);
+        }
+        else
+        {
+            Debug.Log("OnTriggerEnter: block #" + SerialNumber + "collided with " + collision.gameObject.name);
+        }
+        //disable the trigger if we hit another block or hit the floor
+        EnableTrigger(false);
+
         if (callbackFunction != null)
-            callbackFunction(this);
+            callbackFunction(this, collision.gameObject);
+
+        //after callback, set bNewBlock to false
+        bNewBlock = false;
     }
 
     public void Terminate(Slide direction)
     {
+        //immediately disable the block's collider and trigger
+        EnableCollider(false);
+        EnableTrigger(false);   //should already be disabled at this point
+
         bTerminate = true;
         TerminationTime = Time.time + TERMINATION_DELAY_SEC;
 

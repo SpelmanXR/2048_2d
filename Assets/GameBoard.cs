@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// The GameBoard serves as the game manager.
+/// </summary>
 public class GameBoard : MonoBehaviour
 {
     const int NUM_COLS = 5;
@@ -47,6 +50,10 @@ public class GameBoard : MonoBehaviour
         Columns[3] = Column3;
         Columns[4] = Column4;
 
+        for (int i = 0; i < Columns.Length; i++)
+        {
+            Columns[i].MyColumnID = i;
+        }
         PrintBoard();
     }
 
@@ -157,11 +164,12 @@ public class GameBoard : MonoBehaviour
     }
 
 //    bool bFindingMergeables;
-    public void BlockCallback(BlockController bc)
+    public void BlockCallback(BlockController bc, GameObject ObjCollidedWith)
     {
-        if (bc != CurrentBlock) return;
+        //if (bc != CurrentBlock) return;
 //        if (bFindingMergeables) return;
-//        bFindingMergeables = true;        //Debug.Log("BlockCallback called!");
+//        bFindingMergeables = true;
+        Debug.Log("-->Callback: block " + bc.SerialNumber);
 
         //assign to a column
         Columns[CurrentColumn].AddBlock(CurrentBlock, CurrentBlock.transform.position.y);
@@ -234,7 +242,9 @@ public class GameBoard : MonoBehaviour
         if (!CanMerge(row0, col0, row1, col1)) return false;
         if (!CanMerge(row0, col0, row2, col2)) return false;
         if (!CanMerge(row0, col0, row3, col3)) return false;
- 
+
+        Debug.Log("Merge3");
+
         //increment power by 3
         Columns[col0].SetPower(row0, Columns[col0].GetPower(row0) + 3);
 
@@ -263,6 +273,8 @@ public class GameBoard : MonoBehaviour
         if (!CanMerge(row0, col0, row1, col1)) return false;
         if (!CanMerge(row0, col0, row2, col2)) return false;
 
+        Debug.Log("Merge2");
+
         //increment power by 2
         Columns[col0].SetPower(row0, Columns[col0].GetPower(row0) + 2);
 
@@ -287,6 +299,8 @@ public class GameBoard : MonoBehaviour
         //verify 1-way merge
         if (!CanMerge(row0, col0, row1, col1)) return false;
 
+        Debug.Log("Merge1");
+
         //increment power by 1
         Columns[col0].SetPower(row0, Columns[col0].GetPower(row0) + 1);
 
@@ -298,6 +312,12 @@ public class GameBoard : MonoBehaviour
         return true;
     }
 
+    /*
+    string block(int row, int col)
+    {
+        return "Block[" + row + "," + col + "]";
+    }
+    */
 
     BlockController.Slide GetSlideDirection(int col0, int row0, int col1, int row1)
     {
@@ -313,82 +333,89 @@ public class GameBoard : MonoBehaviour
     //function to find mergeable blocks
     void FindMergeables()
     {
-        bool bRepeat = true;
+        bool FoundMatch;
 
-        //while (bRepeat)
-        //{
-            bRepeat = false;
-
-            bool FoundMatch;
-
-            //check for 3 neighbors (L+R+B)
-            FoundMatch = true;
-            while (FoundMatch)
+        //check for 3 neighbors (L+R+B)
+        for (int row = Column.MAX_NUM_ROWS-1; row >=0 ; row--)
+        {
+            for (int col = 0; col < NUM_COLS; col++)
             {
-                FoundMatch = false;
-                for (int row = 0; row < Column.MAX_NUM_ROWS; row++)
+                if (row >= Columns[col].Count) continue;
+
+                FoundMatch = Merge(row, col, row, col - 1, row, col + 1, row - 1, col);
+                if (FoundMatch)
                 {
-                    for (int col = 0; col < NUM_COLS; col++)
-                    {
-                        bool found1 = Merge(row, col, row, col - 1, row, col + 1, row - 1, col);
-                        if (found1) Debug.Log("[LRB]");
-
-                        FoundMatch |= found1;
-                    }
+                    Debug.Log("[LRB]");
+                    return;
                 }
-            if (FoundMatch) return; //bRepeat = true;
-            }   //while (FoundMatch)
+            }  //for (int col = ...
+        } //for (int row = ...
 
-            //check for 2 neighbors (L+R), (R+B) or (L+B)
-            FoundMatch = true;
-            while (FoundMatch)
+
+        //check for 2 neighbors (L+R), (R+B) or (L+B)
+        FoundMatch = false;
+        for (int row = Column.MAX_NUM_ROWS - 1; row >= 0; row--)
+        {
+            for (int col = 0; col < NUM_COLS; col++)
             {
-                FoundMatch = false;
-                for (int row = 0; row < Column.MAX_NUM_ROWS; row++)
+                if (row >= Columns[col].Count) continue;
+
+                FoundMatch = Merge(row, col, row, col - 1, row, col + 1);
+                if (FoundMatch)
                 {
-                    for (int col = 0; col < NUM_COLS; col++)
-                    {
-                        bool found1 = Merge(row, col, row, col - 1, row, col + 1);
-                        if (found1) Debug.Log("[LR]");
-
-                        bool found2 = Merge(row, col, row, col + 1, row - 1, col);
-                        if (found2) Debug.Log("[RB]");
-
-                        bool found3 = Merge(row, col, row, col - 1, row - 1, col);
-                        if (found3) Debug.Log("[LB]");
-
-                        FoundMatch |= found1 | found2 | found3;
-                    }
+                    Debug.Log("[LR]");
+                    return;
                 }
-            if (FoundMatch) return;// bRepeat = true;
-            }   //while (FoundMatch)
 
-            //check for 1 neighbor (L), (R) or (B).
-            FoundMatch = true;
-            while (FoundMatch)
+                FoundMatch = Merge(row, col, row, col + 1, row - 1, col);
+                if (FoundMatch)
+                {
+                    Debug.Log("[RB]");
+                    return;
+                }
+
+                FoundMatch = Merge(row, col, row, col - 1, row - 1, col);
+                if (FoundMatch)
+                {
+                    Debug.Log("[LB]");
+                    return;
+                }
+            }  //for (int col = ...
+        } //for (int row = ...
+
+
+
+
+        //check for 1 neighbor (L), (R) or (B).
+        for (int row = Column.MAX_NUM_ROWS - 1; row >= 0; row--)
+        {
+            for (int col = 0; col < NUM_COLS; col++)
             {
-                FoundMatch = false;
-                for (int row = 0; row < Column.MAX_NUM_ROWS; row++)
+                if (row >= Columns[col].Count) continue;
+
+                FoundMatch = Merge(row, col, row, col - 1);
+                if (FoundMatch)
                 {
-                    for (int col = 0; col < NUM_COLS; col++)
-                    {
-                        bool found1 = Merge(row, col, row, col - 1);
-                        if (found1) Debug.Log("[L]");
-
-                        bool found2 = Merge(row, col, row, col + 1);
-                        if (found2) Debug.Log("[R]");
-
-                        bool found3 = Merge(row, col, row - 1, col);
-                        if (found3) Debug.Log("[B]");
-
-                        FoundMatch |= found1 | found2 | found3;
-                    }
+                    Debug.Log("[L]");
+                    return;
                 }
-            if (FoundMatch) return;// bRepeat = true;
-            }   //while (FoundMatch)
 
-            if (bRepeat) Debug.Log("Repeating...");
-        //}   //while (bRepeat)
+                FoundMatch = Merge(row, col, row, col + 1);
+                if (FoundMatch)
+                {
+                    Debug.Log("[R]");
+                    return;
+                }
+
+                FoundMatch = Merge(row, col, row - 1, col);
+                if (FoundMatch)
+                {
+                    Debug.Log("[B]");
+                    return;
+                }
+            }  //for (int col = ...
+        } //for (int row = ...
+
     }   //void FindMergeables()
 
 }   //class GameBoard

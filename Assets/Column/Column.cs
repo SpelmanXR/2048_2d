@@ -6,6 +6,7 @@ public class Column : MonoBehaviour
 {
     //inspector reference to the Block prefab
     public GameObject BlockPrefab;
+    public int MyColumnID;
 
     List<BlockController> BlockControllers;
     public const int MAX_NUM_ROWS = 6;
@@ -37,7 +38,7 @@ public class Column : MonoBehaviour
     }
 
 
-    //creates a block and adds it to the BlockController list.
+    //creates a block.
     public BlockController CreateBlock(int power)
     {
         //create a block
@@ -53,6 +54,7 @@ public class Column : MonoBehaviour
             return null;
         }
 
+        //Note: setting the power automatically enables the trigger
         blockController.Power = power;
 
         return blockController;
@@ -62,6 +64,7 @@ public class Column : MonoBehaviour
     //Optionally, specify the vertical position on the screen where the block will first appear
     public void AddBlock(BlockController blockController, float YPos = DEFAULT_BLOCK_START_YPOS)
     {
+
         //position it in this column
         Vector2 pos = new Vector2(transform.position.x, YPos);
         blockController.transform.position = pos;
@@ -75,14 +78,25 @@ public class Column : MonoBehaviour
 
         //add to our CodData
         BlockControllers.Add(blockController);
+        Debug.Log("Adding" + block(BlockControllers.Count-1));
+
     }
 
     public void DeleteBlockAt(int index, BlockController.Slide direction = BlockController.Slide.NONE)
     {
+        Debug.Log("Deleting" + block(index));
+
         BlockController bc = BlockControllers[index];
         BlockControllers.RemoveAt(index);
         bc.Terminate(direction);
         //Destroy(bc.gameObject);
+
+        //Now, enable the trigger of the block above, if applicable
+        if (index + 1 < BlockControllers.Count)
+        {
+            Debug.Log("Enabling Trigger on" + block(index+1));
+            BlockControllers[index + 1].EnableTrigger(true);
+        }
     }
 
     //function that returns the power at a specific row
@@ -94,6 +108,8 @@ public class Column : MonoBehaviour
     //function that sets the power at a specific row
     public void SetPower(int row, int power)
     {
+        //Note: setting the power automatically enables the trigger
+        Debug.Log("Setting power for" + block(row) + "to " + power);
         BlockControllers[row].Power = power;
     }
 
@@ -106,5 +122,12 @@ public class Column : MonoBehaviour
     public BlockController GetBlock(int row)
     {
         return BlockControllers[row];
-    }    
+    }
+
+
+    string block(int row)
+    {
+        return " Block(#" + BlockControllers[row].SerialNumber + ")[" + MyColumnID + "][" + row + "] ";
+    }
+
 }
