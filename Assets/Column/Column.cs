@@ -77,11 +77,12 @@ public class Column : MonoBehaviour
         BlockControllers.Add(blockController);
     }
 
-    public void DeleteBlockAt(int index)
+    public void DeleteBlockAt(int index, BlockController.Slide direction = BlockController.Slide.NONE)
     {
         BlockController bc = BlockControllers[index];
         BlockControllers.RemoveAt(index);
-        Destroy(bc.gameObject);
+        bc.Terminate(direction);
+        //Destroy(bc.gameObject);
     }
 
     //function that returns the power at a specific row

@@ -390,7 +390,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDrag: 0.2
   m_AngularDrag: 0.1
   m_GravityScale: 0.1
@@ -412,6 +412,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ValueText: {fileID: 2544052002176230624}
+  SpriteAnimator: {fileID: 2544052001804714932}
+  LightningAnimator: {fileID: 1792462574720761499}
 --- !u!1 &2544052003466450065
 GameObject:
   m_ObjectHideFlags: 0

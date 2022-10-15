@@ -156,15 +156,18 @@ public class GameBoard : MonoBehaviour
         CurrentBlock.transform.position = new Vector2(Columns[CurrentColumn].transform.position.x, CurrentBlock.transform.position.y);
     }
 
+//    bool bFindingMergeables;
     public void BlockCallback(BlockController bc)
     {
-        //Debug.Log("BlockCallback called!");
+        if (bc != CurrentBlock) return;
+//        if (bFindingMergeables) return;
+//        bFindingMergeables = true;        //Debug.Log("BlockCallback called!");
 
         //assign to a column
         Columns[CurrentColumn].AddBlock(CurrentBlock, CurrentBlock.transform.position.y);
 
         //detach the callback
-        bc.callbackFunction = FindMergeables;
+        //bc.callbackFunction = null; //FindMergeables;
 
         state = State.IDLE;
         PrintBoard();
@@ -173,13 +176,16 @@ public class GameBoard : MonoBehaviour
         //CheckBlockForMerge(Columns[CurrentColumn].Count - 1, CurrentColumn);
 
         //now check all blocks
-        FindMergeables();
-    }
 
+        FindMergeables();
+ //       bFindingMergeables = false;
+    }
+    /*
     public void FindMergeables(BlockController bc)
     {
         FindMergeables();
     }
+    */
 
     void SetCurrentBlockGravityScale(float gravityScale)
     {
@@ -233,14 +239,15 @@ public class GameBoard : MonoBehaviour
         Columns[col0].SetPower(row0, Columns[col0].GetPower(row0) + 3);
 
        //delete 3 blocks
-        Columns[col1].DeleteBlockAt(row1);
-        Columns[col2].DeleteBlockAt(row2);
-        Columns[col3].DeleteBlockAt(row3);
+        Columns[col1].DeleteBlockAt(row1, GetSlideDirection(col0, row0, col1, row1));
+        Columns[col2].DeleteBlockAt(row2, GetSlideDirection(col0, row0, col2, row2));
+        Columns[col3].DeleteBlockAt(row3, GetSlideDirection(col0, row0, col3, row3));
 
         PrintBoard();
 
         return true;
     }
+
 
     //overloaded function to merge 3 blocks.  Merge() verifies valid indices
     //and matching powers before attempting to merge.  Returns true on success
@@ -260,8 +267,8 @@ public class GameBoard : MonoBehaviour
         Columns[col0].SetPower(row0, Columns[col0].GetPower(row0) + 2);
 
         //delete 2 blocks
-        Columns[col1].DeleteBlockAt(row1);
-        Columns[col2].DeleteBlockAt(row2);
+        Columns[col1].DeleteBlockAt(row1, GetSlideDirection(col0, row0, col1, row1));
+        Columns[col2].DeleteBlockAt(row2, GetSlideDirection(col0, row0, col2, row2));
 
         PrintBoard();
 
@@ -284,13 +291,24 @@ public class GameBoard : MonoBehaviour
         Columns[col0].SetPower(row0, Columns[col0].GetPower(row0) + 1);
 
         //delete 1 block
-        Columns[col1].DeleteBlockAt(row1);
+        Columns[col1].DeleteBlockAt(row1, GetSlideDirection(col0, row0, col1, row1));
 
         PrintBoard();
 
         return true;
     }
 
+
+    BlockController.Slide GetSlideDirection(int col0, int row0, int col1, int row1)
+    {
+        if (col0 > col1) return BlockController.Slide.RIGHT;
+        if (col1 > col0) return BlockController.Slide.LEFT;
+        if (row0 > row1) return BlockController.Slide.UP;
+        if (row0 < row1) return BlockController.Slide.DOWN;
+
+        Debug.Log("GetSlideDirection(): No valid slide direction found.");
+        return BlockController.Slide.NONE;
+    }
 
     //function to find mergeable blocks
     void FindMergeables()
@@ -318,7 +336,7 @@ public class GameBoard : MonoBehaviour
                         FoundMatch |= found1;
                     }
                 }
-                if (FoundMatch) bRepeat = true;
+            if (FoundMatch) return; //bRepeat = true;
             }   //while (FoundMatch)
 
             //check for 2 neighbors (L+R), (R+B) or (L+B)
@@ -342,7 +360,7 @@ public class GameBoard : MonoBehaviour
                         FoundMatch |= found1 | found2 | found3;
                     }
                 }
-                if (FoundMatch) bRepeat = true;
+            if (FoundMatch) return;// bRepeat = true;
             }   //while (FoundMatch)
 
             //check for 1 neighbor (L), (R) or (B).
@@ -366,7 +384,7 @@ public class GameBoard : MonoBehaviour
                         FoundMatch |= found1 | found2 | found3;
                     }
                 }
-                if (FoundMatch) bRepeat = true;
+            if (FoundMatch) return;// bRepeat = true;
             }   //while (FoundMatch)
 
             if (bRepeat) Debug.Log("Repeating...");
