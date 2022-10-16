@@ -4,17 +4,22 @@ using UnityEngine;
 using TMPro;
 
 /// <summary>
-/// The Block object has a 'Collider' and 'Trigger' children objects.
-/// The collider object is used to control the physics.  It is always on.
-/// The trigger object is turned on/off dpending on the state of the block.
-/// OnTrigger() calls the user supplied callback function.  When the object
-/// is first created, the trigger is enabled.  The OnTrigger() function
-/// disables the trigger, meaning that the callback function is executed
-/// only once.  When a block is terminated, the trigger of the block above it
-/// is re-enabled as that block is now again in free-fall.
+/// The Block object has 2 'Collider' and 4 'Trigger' children objects.
+/// The 2 collider objects are used to control the physics.  They are always on.
+/// The bottom object (ColliderBottom) contains a collider that is about 90%
+/// the width of the block and about 40% of its height.  This collider object
+/// has no rigidbody.  Therefore, it is attached to the parent rigidbody and
+/// triggers the parent's OnCollision() callback.
+/// The top object (ColliderTop) has its own rigidbody.  This is solely for
+/// the purpose of preventing it from calling the parent OnCollision().
+/// With this arrangement, a user-provided callback function is called only
+/// once when two block collide or when a block collides with the floor.
 ///
-/// temp: The callback function may simply set a "needsUpdate" flag in the
-/// GameBoard object.
+/// The left and right trigger objects keep track of objects that come into
+/// contact with the block from the top, bottom, left and right.  Apart from
+/// the transitionary period when a block is falling, the trigger objects should
+/// report being in contact with either 0 or 1 object.  Any other value is
+/// likely an error.
 /// </summary>
 public class BlockController : MonoBehaviour
 {
@@ -24,8 +29,6 @@ public class BlockController : MonoBehaviour
     public TMP_Text ValueText;  //reference to TMP Text
     public Animator SpriteAnimator;
     public Animator LightningAnimator;
-    //public Collider2D ColliderTop;
-    //public Collider2D ColliderBottom;
     public Collider2D TriggerTop;
     public Collider2D TriggerBottom;
     public Collider2D TriggerLeft;
@@ -41,18 +44,17 @@ public class BlockController : MonoBehaviour
     static int SN = 0;      //class serial number
     int serialNumber;   //current object's S/N
 
-    //bool bTerminate = false;        //set to true to self-destruct
-    //const float TERMINATION_DELAY_SEC = 1f;     //time for the termination animation to run
-    //float TerminationTime;
+    bool bTerminate;
 
-    //new block
     //bNewBlock is initially true, but is set to false after the first trigger.
+    /*
     bool bNewBlock;
     public bool NewBlock
     {
         set { }
         get { return bNewBlock; }
     }
+    */
 
     //serial number property
     public int SerialNumber
@@ -90,8 +92,8 @@ public class BlockController : MonoBehaviour
         serialNumber = SN;
         SN++;
 
-        //bTerminate = false;
-        bNewBlock = true;
+        bTerminate = false;
+        //bNewBlock = true;
     }
 
     // Start is called before the first frame update
@@ -102,7 +104,15 @@ public class BlockController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (bTerminate)
+        {
+            if (SpriteAnimator.GetCurrentAnimatorStateInfo(0).IsName("Done"))
+            {
+                //animation has finished playing
+                transform.position = new Vector2(100f, 0f);
+                Destroy(gameObject, 10f);    //destroy in 10 seconds
+            }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -121,10 +131,11 @@ public class BlockController : MonoBehaviour
             callbackFunction(this, collision.gameObject);
 
         //after callback, set bNewBlock to false
-        bNewBlock = false;
+        //bNewBlock = false;
     }
 
 
+    /* To terminate a block, execute the slider animation.  Then, when the animation is done, set the x position to some large value and execute the Destroy() function with a 5-10 second delay.*/
     public void Terminate(Slide direction)
     {
         switch (direction)
@@ -154,6 +165,9 @@ public class BlockController : MonoBehaviour
                 LightningAnimator.SetTrigger("none");
                 break;
         }
+
+        //mark block for termination
+        bTerminate = true;
     }
     
 }

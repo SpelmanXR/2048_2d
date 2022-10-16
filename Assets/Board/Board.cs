@@ -64,7 +64,7 @@ public class Board : MonoBehaviour
                 }
 
                 if (Input.GetKeyDown(KeyCode.D))
-                {
+                {/*
                     List<GameObject> x = GetColumn(0);
                     string s = "";
 
@@ -80,6 +80,8 @@ public class Board : MonoBehaviour
                         s = "No Blocks";
                     }
                     Debug.Log("Col[0]: " + s);
+                    */
+                    BoardMatrix[2, 1].GetComponent<BlockController>().Terminate(BlockController.Slide.UP);
                 }
 
                 break;
@@ -273,19 +275,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    /*
-    GameObject GetBlock(int col, int row)
-    {
-        int row_ = 0;
-        ProximitySensor sensor = Floor[col].GetComponent<ProximitySensor>();
 
-        while (sensor.Objects[row])
-        {
-            sensor = sensor.Objects[row];
-        }
-        return null;
-    }
-    */
 
     void PrintBoard()
     {
