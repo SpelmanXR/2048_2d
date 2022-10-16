@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/*
 /// <summary>
 /// The GameBoard serves as the game manager.
 /// </summary>
 public class GameBoard : MonoBehaviour
 {
+    
     const int NUM_COLS = 5;
 
     public Column Column0;
@@ -188,19 +190,19 @@ public class GameBoard : MonoBehaviour
         FindMergeables();
  //       bFindingMergeables = false;
     }
-    /*
+    /x*
     public void FindMergeables(BlockController bc)
     {
         FindMergeables();
     }
-    */
+    *x/
 
     void SetCurrentBlockGravityScale(float gravityScale)
     {
         CurrentBlock.GetComponent<Rigidbody2D>().gravityScale = gravityScale;
     }
 
-    /*
+    /x*
     BlockController GetBlock(int row, int col)
     {
         //check if there is no block at the provided coodinates
@@ -208,7 +210,7 @@ public class GameBoard : MonoBehaviour
 
         return Columns[col];
     }
-    */
+    *x/
 
     //function to check if the provided row and column indeces reference a valid block
     bool BlockPresent(int row, int col)
@@ -312,12 +314,12 @@ public class GameBoard : MonoBehaviour
         return true;
     }
 
-    /*
+    /x*
     string block(int row, int col)
     {
         return "Block[" + row + "," + col + "]";
     }
-    */
+    *x/
 
     BlockController.Slide GetSlideDirection(int col0, int row0, int col1, int row1)
     {
@@ -419,3 +421,4 @@ public class GameBoard : MonoBehaviour
     }   //void FindMergeables()
 
 }   //class GameBoard
+*/

@@ -24,8 +24,12 @@ public class BlockController : MonoBehaviour
     public TMP_Text ValueText;  //reference to TMP Text
     public Animator SpriteAnimator;
     public Animator LightningAnimator;
-    public Collider2D Collider;
-    public Collider2D Trigger;
+    //public Collider2D ColliderTop;
+    //public Collider2D ColliderBottom;
+    public Collider2D TriggerTop;
+    public Collider2D TriggerBottom;
+    public Collider2D TriggerLeft;
+    public Collider2D TriggerRight;
 
     //defines what type of method you're going to call
     //and declare a variable to hold the method you're going to call.
@@ -37,9 +41,9 @@ public class BlockController : MonoBehaviour
     static int SN = 0;      //class serial number
     int serialNumber;   //current object's S/N
 
-    bool bTerminate = false;        //set to true to self-destruct
-    const float TERMINATION_DELAY_SEC = 1f;     //time for the termination animation to run
-    float TerminationTime;
+    //bool bTerminate = false;        //set to true to self-destruct
+    //const float TERMINATION_DELAY_SEC = 1f;     //time for the termination animation to run
+    //float TerminationTime;
 
     //new block
     //bNewBlock is initially true, but is set to false after the first trigger.
@@ -64,7 +68,7 @@ public class BlockController : MonoBehaviour
         {
             power = value;
             ValueText.text = Value.ToString();
-            EnableTrigger(true);
+            //EnableTrigger(true);
         }
 
         get { return power; }
@@ -86,7 +90,7 @@ public class BlockController : MonoBehaviour
         serialNumber = SN;
         SN++;
 
-        bTerminate = false;
+        //bTerminate = false;
         bNewBlock = true;
     }
 
@@ -98,43 +102,20 @@ public class BlockController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (bTerminate)
-        {
-            //wait for slider animation to end
-            //if (SpriteAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.999f)
-            if (Time.time > TerminationTime)
-            {
-                Destroy(gameObject);
-            }
-        }
+
     }
 
-    public void EnableTrigger(bool val)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Trigger.enabled = val;
-    }
-
-    public void EnableCollider(bool val)
-    {
-        Collider.enabled = val;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //if our trigger has been disabled, do not respond (another block hit our collider).
-        if (Trigger.enabled == false) return;
-
         //check if we collided with another block
         if (collision.gameObject.GetComponent<BlockController>())
         {
-            Debug.Log("OnTriggerEnter: block #" + SerialNumber + "collided with block #" + collision.gameObject.GetComponent<BlockController>().SerialNumber);
+            Debug.Log("OnCollisionEnter: block #" + SerialNumber + " collided with block #" + collision.gameObject.GetComponent<BlockController>().SerialNumber);
         }
         else
         {
-            Debug.Log("OnTriggerEnter: block #" + SerialNumber + "collided with " + collision.gameObject.name);
+            Debug.Log("OnCollisionEnter: block #" + SerialNumber + " collided with " + collision.gameObject.name);
         }
-        //disable the trigger if we hit another block or hit the floor
-        EnableTrigger(false);
 
         if (callbackFunction != null)
             callbackFunction(this, collision.gameObject);
@@ -143,15 +124,9 @@ public class BlockController : MonoBehaviour
         bNewBlock = false;
     }
 
+
     public void Terminate(Slide direction)
     {
-        //immediately disable the block's collider and trigger
-        EnableCollider(false);
-        EnableTrigger(false);   //should already be disabled at this point
-
-        bTerminate = true;
-        TerminationTime = Time.time + TERMINATION_DELAY_SEC;
-
         switch (direction)
         {
             case Slide.UP:
@@ -180,5 +155,5 @@ public class BlockController : MonoBehaviour
                 break;
         }
     }
-
+    
 }
