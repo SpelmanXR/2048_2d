@@ -7,7 +7,7 @@ public class Board : MonoBehaviour
 {
     public TMP_Text DebugTxt;
 
-    enum State { IDLE, BLOCK_CREATED, BLOCK_ASSINGED };
+    enum State { IDLE, BLOCK_CREATED, UPDATE_BOARD };
     State state;
 
     public int MinPower = 1;
@@ -111,6 +111,20 @@ public class Board : MonoBehaviour
                     break;
                 }
 
+            case State.UPDATE_BOARD:
+                {
+                    /*
+                    BuildBoardMatrix();
+                    PrintBoard();
+
+                    //merge blocks as necessary
+                    FindMergeables();
+
+                    state = State.IDLE;
+                    */
+                    break;
+                }
+
             default:
                 break;
         }
@@ -181,6 +195,7 @@ public class Board : MonoBehaviour
         Debug.Log("-->Callback: block " + bc.SerialNumber);
 
         state = State.IDLE;
+
         BuildBoardMatrix();
         PrintBoard();
 
