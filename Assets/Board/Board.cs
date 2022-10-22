@@ -10,7 +10,7 @@ public class Board : MonoBehaviour
     enum State { IDLE, BLOCK_CREATED, UPDATE_BOARD };
     State state;
 
-    public int MinPower = 1;
+    public int MinPower = 0;
     public int MaxPower = 5;
 
     public int FirstColXPosition = -2;

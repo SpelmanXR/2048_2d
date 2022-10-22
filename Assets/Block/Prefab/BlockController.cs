@@ -27,12 +27,15 @@ public class BlockController : MonoBehaviour
 
     int power;      //the power of 2 field
     public TMP_Text ValueText;  //reference to TMP Text
-    public Animator SpriteAnimator;
+    public GameObject Sprite;
+    Animator SpriteAnimator;
+    SpriteRenderer spriteRenderer;
     public Animator LightningAnimator;
     public Collider2D TriggerTop;
     public Collider2D TriggerBottom;
     public Collider2D TriggerLeft;
     public Collider2D TriggerRight;
+    public Color[] BlockColors;
 
     //defines what type of method you're going to call
     //and declare a variable to hold the method you're going to call.
@@ -63,6 +66,20 @@ public class BlockController : MonoBehaviour
         get { return serialNumber; }
     }
 
+    //property to set the block background color
+    /*
+    public Color BlockColor
+    {
+        set
+        {
+            spriteRenderer.color = value;
+        }
+        get
+        {
+            return spriteRenderer.color;
+        }
+    }*/
+
     //Power of 2 property
     public int Power
     {
@@ -70,7 +87,10 @@ public class BlockController : MonoBehaviour
         {
             power = value;
             ValueText.text = Value.ToString();
-            //EnableTrigger(true);
+
+            //set the block color
+            spriteRenderer.color = BlockColors[power];
+            Debug.Log("Setting block color to " + BlockColors[power]);
         }
 
         get { return power; }
@@ -94,11 +114,14 @@ public class BlockController : MonoBehaviour
 
         bTerminate = false;
         //bNewBlock = true;
+
+        spriteRenderer = Sprite.GetComponent<SpriteRenderer>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        SpriteAnimator = Sprite.GetComponent<Animator>();
     }
 
     // Update is called once per frame
