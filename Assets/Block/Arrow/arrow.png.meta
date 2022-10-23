@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3e7772434bd7844e28fca5507d33898e
+guid: 8d0e10c7f64b045e38ed3241c097331c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -42,12 +42,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 1000
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -126,133 +126,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: bolt_100x62_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 33.333332
-        height: 62
-      alignment: 2
-      pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 33be38aad132f404e9244cc78b56a7ac
-      internalID: 782371028
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bolt_100x62_1
-      rect:
-        serializedVersion: 2
-        x: 33
-        y: 0
-        width: 33.333332
-        height: 62
-      alignment: 2
-      pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 40d4b4d856e4b49c98574ed602fc7de6
-      internalID: 1105607972
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bolt_100x62_2
-      rect:
-        serializedVersion: 2
-        x: 66
-        y: 0
-        width: 33.333332
-        height: 62
-      alignment: 2
-      pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5c5db1b7bd1b94c30adc92bea628d05d
-      internalID: -1391267104
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bolt_100x62_3
-      rect:
-        serializedVersion: 2
-        x: 99
-        y: 0
-        width: 33.333332
-        height: 62
-      alignment: 2
-      pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 76ba08f704e2d46de82159ba59d0e981
-      internalID: -1717628696
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bolt_100x62_4
-      rect:
-        serializedVersion: 2
-        x: 132
-        y: 0
-        width: 33.333332
-        height: 62
-      alignment: 2
-      pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 77e2561ff4fa4498e8dd63ac0d0018be
-      internalID: 1274170082
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bolt_100x62_5
-      rect:
-        serializedVersion: 2
-        x: 165
-        y: 0
-        width: 33.333332
-        height: 62
-      alignment: 2
-      pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a12d1128229e943099d33a2848fcec51
-      internalID: -1129557231
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -263,13 +137,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      bolt_100x62_1: 1105607972
-      bolt_100x62_5: -1129557231
-      bolt_100x62_0: 782371028
-      bolt_100x62_3: -1717628696
-      bolt_100x62_2: -1391267104
-      bolt_100x62_4: 1274170082
+    nameFileIdTable: {}
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

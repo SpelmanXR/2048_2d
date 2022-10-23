@@ -30,12 +30,35 @@ public class BlockController : MonoBehaviour
     public GameObject Sprite;
     Animator SpriteAnimator;
     SpriteRenderer spriteRenderer;
-    public Animator LightningAnimator;
+    //public Animator LightningAnimator;
+    public Animator RightArrow;
+    public Animator LeftArrow;
+    public Animator UpArrow;
+    public Animator DownArrow;
     public Collider2D TriggerTop;
     public Collider2D TriggerBottom;
     public Collider2D TriggerLeft;
     public Collider2D TriggerRight;
-    public Color[] BlockColors;
+    //set default block colors
+    public Color[] BlockColors = {
+        new Color(0.236f, 0.651f, 0.341f, 1.000f),  //1 block
+        new Color(0.802f, 0.527f, 0.155f, 1.000f),  //2 block
+        new Color(0.567f, 0.186f, 0.840f, 1.000f),  //4 block
+        new Color(0.133f, 0.393f, 0.765f, 1.000f),  //8 block
+        new Color(0.792f, 0.318f, 0.318f, 1.000f),  //16 block
+        new Color(0.000f, 0.000f, 0.000f, 1.000f),  //32 block
+        new Color(0.152f, 0.453f, 0.421f, 1.000f),  //64 block
+        new Color(0.642f, 0.233f, 0.575f, 1.000f),  //128 block
+        new Color(0.377f, 0.361f, 0.361f, 1.000f),  //256 block
+        new Color(0.623f, 0.573f, 0.115f, 1.000f),  //512 block
+        new Color(0.802f, 0.064f, 0.064f, 1.000f),  //1K block
+        new Color(0.047f, 0.000f, 0.800f, 1.000f),  //2K block
+        new Color(0.032f, 0.358f, 0.224f, 1.000f),  //4K block
+        new Color(0.223f, 0.112f, 0.415f, 1.000f),  //8K block
+        new Color(0.547f, 0.342f, 0.111f, 1.000f),  //16K block
+        new Color(0.788f, 0.127f, 0.706f, 1.000f),  //32K block
+        new Color(0.186f, 0.297f, 0.321f, 1.000f),   //64K block
+    };
 
     //defines what type of method you're going to call
     //and declare a variable to hold the method you're going to call.
@@ -122,6 +145,10 @@ public class BlockController : MonoBehaviour
     void Start()
     {
         SpriteAnimator = Sprite.GetComponent<Animator>();
+        foreach (Color x in BlockColors)
+        {
+            Debug.Log(x);
+        }
     }
 
     // Update is called once per frame
@@ -165,27 +192,26 @@ public class BlockController : MonoBehaviour
         {
             case Slide.UP:
                 SpriteAnimator.SetTrigger("MoveUp");
-                LightningAnimator.SetTrigger("up");
+                UpArrow.SetTrigger("Animate");
                 break;
 
             case Slide.DOWN:
                 SpriteAnimator.SetTrigger("MoveDown");
-                LightningAnimator.SetTrigger("down");
+                DownArrow.SetTrigger("Animate");
                 break;
 
             case Slide.LEFT:
                 SpriteAnimator.SetTrigger("MoveLeft");
-                LightningAnimator.SetTrigger("left");
+                LeftArrow.SetTrigger("Animate");
                 break;
 
             case Slide.RIGHT:
                 SpriteAnimator.SetTrigger("MoveRight");
-                LightningAnimator.SetTrigger("right");
+                RightArrow.SetTrigger("Animate");
                 break;
 
             default:
                 Debug.Log("Terminate(): Invalid Slide Direction.");
-                LightningAnimator.SetTrigger("none");
                 break;
         }
 

@@ -1,10 +1,9 @@
 ﻿Credits
 =======
 
-Lightning
-https://opengameart.org/content/lightning-sprite-texture
+Arrow
+https://pixabay.com/vectors/arrow-right-purple-pointing-shape-25894/
 
-Bolt
-https://toppng.com/free-image/lightning-effect-png-PNG-free-PNG-Images_105264
-
+Font
+https://www.dafont.com/rotten-banquet.font
 
